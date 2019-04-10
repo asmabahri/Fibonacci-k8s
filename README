@@ -1,0 +1,10 @@
+For testing purposes, this dumb fibonacci app is a way lot 
+more complicated than it has to be but, that's a good example
+of how to deploy a multi container app.
+
+Techs used are :
+    - nginx routing to & React App
+    - Express server connected to :
+    - redis + Worker & (redis storing the calculated value 
+      of the index passed to the fibonacci function)
+    - Postgres (storing just the index of the fibonnaci function : fibonacci(index))

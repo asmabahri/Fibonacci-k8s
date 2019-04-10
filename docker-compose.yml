@@ -15,7 +15,7 @@ services:
       # pour éviter de rebuild le container en permanence.
       - ./server:/app
     environment:
-      # on place juste le nom du service, pas d'adresse
+      # on place juste le nom du service (redis), pas d'adresse IP
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - PGUSER=postgres

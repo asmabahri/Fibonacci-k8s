@@ -27,5 +27,18 @@ after_success:
   - docker push ynno/fibonacci-server
   - docker push ynno/fibonacci-worker
 
+deploy:
+  provider: elaticbeanstalk
+  region: eu-west-3
+  app: fibonacci
+  env: Fibonacci-env
+  bucket_name: elasticbeanstalk-eu-west-534657018077
+  bucket_path: docker-multi
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: $AWS_SECRET_KEY
+
 
 
