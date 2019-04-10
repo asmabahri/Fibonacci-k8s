@@ -28,7 +28,7 @@ after_success:
   - docker push ynno/fibonacci-worker
 
 deploy:
-  provider: elaticbeanstalk
+  provider: elasticbeanstalk
   region: eu-west-3
   app: fibonacci
   env: Fibonacci-env
