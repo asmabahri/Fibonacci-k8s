@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: worker
+  template:
+    metadata:
+      labels:
+        component: worker
+    spec:
+      containers:
+        - name: worker
+          image: ynno/fibonacci-worker:latest
+          env:
+            - name: REDIS_HOST
+              value: redis-cluster-ip-svc # l'hôte est le nom du service en question
+            - name: REDIS_PORT
+              value: '6379'
+# aucun port à ouvrir puisque le worker va écouter le port 
+# sur lequel redis est connecté en revanche, aucun service ne se 
+# connecte au worker directement

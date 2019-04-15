@@ -1,3 +1,5 @@
+Version destinée à être gérée via kubernetes.
+
 For testing purposes, this dumb fibonacci app is a way lot 
 more complicated than it has to be but, that's a good example
 of how to deploy a multi container app.

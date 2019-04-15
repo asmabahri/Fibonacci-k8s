@@ -11,7 +11,7 @@ class App extends Component {
       <Router>
         <div className="App">
           <header className="App-header">
-            <h1> Fibonacci calculator </h1>
+            <h1> Fibonacci calculator v-0.1</h1>
             <Link to="/">Home</Link>
             <Link to="/otherpage">Other page</Link>
           </header>

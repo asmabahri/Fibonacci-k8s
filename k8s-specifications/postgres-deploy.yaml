@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: postgres
+  template:
+    metadata:
+      labels:
+        component: postgres
+    spec:
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: database-pvc
+      containers:
+        - name: postgres
+          image: postgres
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres # any data stored in mountPath are gonna be stored
+                                # in a folder called postgres inside the persistent
+                                # volume claim (mandatory for postgres)
+          env:
+            # If the image postgres sees an env variable PGPASSWORD, it's gonna use
+            # that password as supposed the default password whatever it is.
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: PGPASSWORD # Si c'est confus du fait qu'on répète ici 2 fois PGPASSWORD
+                                  # avec name: pgpassword, il faut rappeler ici que:
+                                  # name: pgpassword correspond au nom du secret préalablement
+                                  # créé et key: PGPASSWORD la clé incluse dans la création
+                                  # du secret. Plus d'info (voir server-deploy)

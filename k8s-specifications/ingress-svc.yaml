@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-svc
+  annotations:
+    # we want to create an ingress controller based on the nginx project
+    kubernetes.io/ingress.class: nginx
+    # how the actual copy of nginx behaves.
+    # do the same thing as "forward every request with /api " section
+    # in our fibonacci-elastic-no-kuberetes nginx conf
+    # See : https://kubernetes.github.io/ingress-nginx/examples/rewrite
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  rules:
+    - http:
+        # 2 paths to match traffic to
+        paths:
+          - path: /?(.*)
+            backend:
+              # just refering to the related service name  
+              serviceName: client-cluster-ip-svc
+              servicePort: 3000
+          - path: /api/?(.*)
+            backend:
+              serviceName: server-cluster-ip-svc
+              servicePort: 5000
+              

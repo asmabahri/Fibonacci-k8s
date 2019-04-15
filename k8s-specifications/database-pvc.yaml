@@ -1,0 +1,14 @@
+# persistent volume claim for postgres database
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: database-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+    # ReadWriteOnce : can be used by a single node
+    # ReadOnlyMany : can be read by a multiple nodes
+    # ReadWriteMany : can be read & written by a multiple nodes
+  resources:
+    requests:
+      storage: 1Gi

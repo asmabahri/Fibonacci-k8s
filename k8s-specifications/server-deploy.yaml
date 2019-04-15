@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: server
+  template:
+    metadata:
+      labels:
+        component: server
+    spec:
+      containers:
+        - name: server
+          image: ynno/fibonacci-server:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: REDIS_HOST
+              value: redis-cluster-ip-svc
+            - name: REDIS_PORT
+              # ne pas oublier d'entourer de quotes les nombres qu'on passe
+              # sinon kubernetes nous signalera une erreur du type :
+              # "cannot convert int64 to string"
+              value: '6379'
+            - name: PGUSER
+              value: postgres
+            - name: PGHOST
+              value: postgres-cluster-ip-svc
+            - name: PGPORT
+              value: '5432'
+            - name: PGDATABASE
+              value: postgres
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword # le nom du secret qu'on a créé au préalable
+                  key: PGPASSWORD # va retrouver la clé PGPASSWORD au sein du secret
+                                  # et associer sa valeur. Le nom de la clé ici (PGPASSWORD)
+                                  # n'est pas lié à name: PGPASSWORD qu'on a défini plus haut!
+                                  # c'est du au fait qu'on a créé cette clé avec le nom PGPASSWORD lorsqu'on a défini
+                                  # le secret. Rappel :
+                                  # kubectl create secret generic pgpassword --from-literal PGPASSWORD=postgres_password             
