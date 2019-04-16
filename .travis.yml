@@ -14,7 +14,7 @@ before_install:
   - curl https://sdk.cloud.google.com | bash > /dev/null;
   - source $HOME/google-cloud-sdk/path.bash.inc
   - gcloud components update kubectl
-  - gcloud auth activate-service-account --key-file service-account.json
+  - gcloud auth activate-service-account --key-file fibonacci-k8s-237720-5fa0e333e8d6.json
   - gcloud set project fibonacci-k8s-237720
   - gcloud config set compute/zone europe-west3-a
   - gcloud container clusters get-credentials fibonacci
