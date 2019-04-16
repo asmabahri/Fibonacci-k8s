@@ -10,3 +10,35 @@ Techs used are :
     - redis + Worker & (redis storing the calculated value 
       of the index passed to the fibonacci function)
     - Postgres (storing just the index of the fibonnaci function : fibonacci(index))
+
+Création du fichier travis.yml
+Création du cluster sur google cloud (3 nodes)
+Encryptage du fichier fibonacci.json contenant les identifiants de l'user google cloud
+Compléter les variables d'environnement DOCKER_USERNAME et DOCKER_PASSWORD dans travis
+(more options -> settings -> Environment settings)
+Créer un fichier deploy.sh qui indiquera à travis les instructions à suivre pour le 
+déploiement (via kubernetes sur google cloud)
+Créer le secret pour le mot de passe de postgrestql dans google cloud
+  Rappel : kubectl create secret generic pgpassword --from-literal PGPASSWORD=mot_de_passe
+
+Installer kubernetes nginx ingress controller. 
+  Voir : https://kubernetes.github.io/ingress-nginx/deploy/
+  Ici on a choisi de l'installer  via helm (le package manager de kubernetes)
+  Rappel : yelm fonctionne comme un client qui va se connecter sur un server (tiller)
+  qui va créer un pod au sein du cluster par lequel on va pouvoir effectuer nos 
+  modifications. Tiller fonctionne avec un système de droits (RBAC). On doit
+  donc créer un service account et l'associer à un "ClusterRoleBinding" ou
+  un RoleBinding pour lui  attribuer les droits nécessaires.
+
+  Les commandes nécessaires:
+    Créer un nouveau 'service account' nommé 'tiller' dans le namespace 'kube-system'
+      kubectl create serviceaccount --namespace kube-system tiller
+
+    Créer un nouveau clusterRoleBinding avec le role 'cluster-admin' et l'assigne au
+    service account 'tiller'
+      kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+    
+  Initialiser :
+    helm init --service-account tiller --upgrade
+
+

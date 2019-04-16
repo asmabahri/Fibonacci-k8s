@@ -1,0 +1,37 @@
+sudo: required
+services:
+  - docker
+env:
+  global:
+    # variable defining the image tag as the last git SHA
+    - GIT_SHA=$(GIT rev-parse HEAD)
+    # configure google cloud cli and make sure that it does not 
+    # try to display any prompt that requires any user input because
+    # we cannot respond in travis environment
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
+before_install:
+  - openssl aes-256-cbc -K $encrypted_94a4db51c72f_key -iv $encrypted_94a4db51c72f_iv -in fibonacci-k8s-237720-5fa0e333e8d6.json.enc -out fibonacci-k8s-237720-5fa0e333e8d6.json -d  
+  - curl https://sdk.cloud.google.com | bash > /dev/null;
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  - gcloud components update kubectl
+  - gcloud auth activate-service-account --key-file service-account.json
+  - gcloud set project fibonacci-k8s-237720
+  - gcloud config set compute/zone europe-west3-a
+  - gcloud container clusters get-credentials fibonacci
+    # login to docker hub
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    # build test image and build as unique image
+  - docker build -t ynno/fibonacci-test -f ./client/Dockerfile.dev ./client
+
+script:
+  # run tests
+  - docker run ynno/fibonacci-test npm test -- --coverage
+
+deploy:
+  # provider is "script" which is telling to travis that we will
+  # take care of the deployment, just run the script file for us
+  provider: script
+  script: bash ./deploy.sh
+  on:
+    branch: master
+
