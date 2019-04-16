@@ -41,4 +41,6 @@ Installer kubernetes nginx ingress controller.
   Initialiser :
     helm init --service-account tiller --upgrade
 
+  Installer enfin Ingress nginx controller:
+  helm install stable/nginx-ingress --name my-nginx --set rbac.create=true
 
