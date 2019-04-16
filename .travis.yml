@@ -4,7 +4,7 @@ services:
 env:
   global:
     # variable defining the image tag as the last git SHA
-    - GIT_SHA=$(GIT rev-parse HEAD)
+    - GIT_SHA=$(git rev-parse HEAD)
     # configure google cloud cli and make sure that it does not 
     # try to display any prompt that requires any user input because
     # we cannot respond in travis environment
